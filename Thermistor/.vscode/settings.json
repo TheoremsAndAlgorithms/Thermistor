@@ -1,0 +1,10 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "clangd.path": "c:\\Espressif\\frameworks\\esp-idf-v5.5.1\\tools\\tools\\esp-clang\\esp-19.1.2_20250312\\esp-clang\\bin\\clangd.exe",
+  "clangd.arguments": [
+    "--background-index",
+    "--query-driver=**",
+    "--compile-commands-dir=c:\\Users\\Nikola\\Desktop\\Files\\ESP\\YouTube\\Thermistor\\Thermistor\\Thermistor\\build"
+  ],
+  "idf.currentSetup": "c:\\Espressif\\frameworks\\esp-idf-v5.5.1\\v5.5.1\\esp-idf"
+}
