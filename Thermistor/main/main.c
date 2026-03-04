@@ -15,8 +15,8 @@
 #define SUP_VOL      3.3f       /* V_S   (Volt)   */
 #define RES_UP       4640.0f    /* R_U   (Ohm)    */
 #define BETA         3977.0f    /* β     (Kelvin) */
-#define RES_25       4700.0f    /* R_T_O (Ohm)    */
-#define TMP_25       298.15f    /* T_O   (Kelvin) */
+#define RES_25       4700.0f    /* R_T_0 (Ohm)    */
+#define TMP_25       298.15f    /* T_0   (Kelvin) */
 
 #define MILLIVOLTS_TO_VOLTS(mv) ((mv)  / 1000.0f)
 #define KEL_TO_DEG_C(kel)       ((kel) - 273.15f) 
