@@ -5,24 +5,26 @@
 #include "freertos/FreeRTOS.h"
 #include <math.h>
 
+/* ESP32 pin D34 is used as the ADC input pin */
+
 #define ADC_CHANNEL  ADC_CHANNEL_6
 #define ADC_UNIT     ADC_UNIT_1
 #define ADC_ATTEN    ADC_ATTEN_DB_12
 #define ADC_BITWIDTH ADC_BITWIDTH_12
 
-#define SUP_VOL     3.3f       /* Volts   */
-#define VOL_DIV_RES 4640.0f    /* Ohms    */
-#define BETA        3977.0f    /* Kelvins */
-#define TMP_25      298.15f    /* Kelvins */
-#define RES_25      4700.0f    /* Ohms    */
+#define SUP_VOL      3.3f       /* V_S   (Volt)   */
+#define RES_UP       4640.0f    /* R_U   (Ohm)    */
+#define BETA         3977.0f    /* β     (Kelvin) */
+#define RES_25       4700.0f    /* R_T_O (Ohm)    */
+#define TMP_25       298.15f    /* T_O   (Kelvin) */
 
-#define MILIVOLTS_TO_VOLTS(mv) ((mv)  / 1000.0f)
-#define KEL_TO_DEG_C(kel)      ((kel) - 273.15f)
+#define MILLIVOLTS_TO_VOLTS(mv) ((mv)  / 1000.0f)
+#define KEL_TO_DEG_C(kel)       ((kel) - 273.15f) 
 
-const char TAG[] = "main";
+static const char TAG[] = "main";
 
-adc_oneshot_unit_handle_t _hUnit = NULL;
-adc_cali_handle_t         _hCali = NULL;
+static adc_oneshot_unit_handle_t _hUnit = NULL;
+static adc_cali_handle_t         _hCali = NULL;
 
 void ADC_Init(void)
 {
@@ -56,14 +58,14 @@ float ADC_GetVoltage_V(void)
     int vol_mV = 0;
     ESP_ERROR_CHECK(adc_cali_raw_to_voltage(_hCali, adcVal_raw, &vol_mV));
 
-    return MILIVOLTS_TO_VOLTS(vol_mV);
+    return MILLIVOLTS_TO_VOLTS(vol_mV);
 }
 
 float NTC_GetTemperature_degC(void) // From NTCLE100E3472JB0
 {
     float vol_V   = ADC_GetVoltage_V();
-    float res_ohm = VOL_DIV_RES * vol_V / (SUP_VOL - vol_V);
-    float tmp_K   = BETA * TMP_25 / (TMP_25 * logf(res_ohm / RES_25) + BETA);
+    float res_ohm = RES_UP * vol_V / (SUP_VOL - vol_V);                       // Equation (1)
+    float tmp_K   = BETA * TMP_25 / (TMP_25 * logf(res_ohm / RES_25) + BETA); // Equation (2)
 
     return KEL_TO_DEG_C(tmp_K);
 }
